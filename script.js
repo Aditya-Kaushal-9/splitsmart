@@ -65,16 +65,65 @@ function updateRoommateList() {
 
                 </div>
 
-                <span>Roommate ${index + 1}</span>
+                <button
+                    class="delete-button"
+                    onclick="removeRoommate(${index})"
+                >
+                    🗑️
+                </button>
 
             </div>
 
         `;
     });
 }
+function removeRoommate(index) {
 
+    const person = roommates[index];
 
-/* UPDATE PAID BY DROPDOWN */
+    const usedInExpense =
+        expenses.some(
+            expense => expense.paidBy === person
+        );
+
+    if (usedInExpense) {
+
+        alert(
+            `${person} cannot be removed because they have paid an expense. Delete their expense first.`
+        );
+
+        return;
+    }
+
+    const confirmRemove =
+        confirm(
+            `Remove ${person} from the roommates list?`
+        );
+
+    if (!confirmRemove) {
+        return;
+    }
+
+    roommates.splice(index, 1);
+
+    updateRoommateList();
+    updatePaidBy();
+    updateStats();
+
+    document.getElementById("balanceList").innerHTML = `
+        <p class="empty">
+            Add expenses to calculate balances.
+        </p>
+    `;
+
+    document.getElementById("settlementResult").innerHTML = `
+        <div class="empty settlement-empty">
+            Add expenses and click
+            <b>Calculate</b>
+            to generate the optimal settlement plan.
+        </div>
+    `;
+}
 
 function updatePaidBy() {
 
@@ -159,7 +208,6 @@ function updateExpenseList() {
     const list =
         document.getElementById("expenseList");
 
-
     if (expenses.length === 0) {
 
         list.innerHTML = `
@@ -171,9 +219,7 @@ function updateExpenseList() {
         return;
     }
 
-
     list.innerHTML = "";
-
 
     expenses.forEach((expense, index) => {
 
@@ -193,9 +239,19 @@ function updateExpenseList() {
 
                 </div>
 
+                <div style="display:flex; align-items:center; gap:12px;">
 
-                <div class="expense-amount">
-                    ₹${expense.amount.toFixed(2)}
+                    <div class="expense-amount">
+                        ₹${expense.amount.toFixed(2)}
+                    </div>
+
+                    <button
+                        class="delete-button"
+                        onclick="removeExpense(${index})"
+                    >
+                        🗑️
+                    </button>
+
                 </div>
 
             </div>
@@ -203,11 +259,42 @@ function updateExpenseList() {
         `;
 
     });
-
 }
+function removeExpense(index) {
 
+    const expense = expenses[index];
 
-/* CLEAR EXPENSES */
+    const confirmRemove =
+        confirm(
+            `Delete "${expense.title}"?`
+        );
+
+    if (!confirmRemove) {
+        return;
+    }
+
+    expenses.splice(index, 1);
+
+    updateExpenseList();
+    updateStats();
+
+    document.getElementById("balanceList").innerHTML = `
+        <p class="empty">
+            Add expenses to calculate balances.
+        </p>
+    `;
+
+    document.getElementById("settlementResult").innerHTML = `
+        <div class="empty settlement-empty">
+            Add expenses and click
+            <b>Calculate</b>
+            to generate the optimal settlement plan.
+        </div>
+    `;
+
+    document.getElementById("transactionCount")
+        .textContent = "0";
+}
 
 function clearExpenses() {
 
