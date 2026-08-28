@@ -1,0 +1,430 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f5f7fb;
+    color: #172033;
+    min-height: 100vh;
+}
+
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+    background: #111827;
+    color: white;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: #4f8cff;
+}
+
+.tagline {
+    color: #aeb8ca;
+    font-size: 14px;
+}
+
+
+/* ================= MAIN ================= */
+
+main {
+    width: min(1100px, 90%);
+    margin: auto;
+    padding: 40px 0;
+}
+
+
+/* ================= HERO ================= */
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 45px;
+    border-radius: 22px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+.small-title {
+    color: #4f8cff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.hero h1 {
+    font-size: 44px;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+}
+
+.hero h1 span {
+    color: #4f8cff;
+}
+
+.hero-text {
+    color: #687386;
+    max-width: 650px;
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.hero-icon {
+    font-size: 85px;
+    padding: 25px;
+}
+
+
+/* ================= STATS ================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 23px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+}
+
+.stat-card p {
+    color: #748096;
+    font-size: 14px;
+}
+
+.stat-card h2 {
+    margin-top: 8px;
+    font-size: 28px;
+}
+
+
+/* ================= DASHBOARD ================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+
+/* ================= CARD ================= */
+
+.card {
+    background: white;
+    padding: 27px;
+    border-radius: 17px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+}
+
+.card h2 {
+    font-size: 20px;
+    margin-bottom: 17px;
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+/* ================= INPUTS ================= */
+
+.input-group {
+    display: flex;
+    gap: 9px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d9deea;
+    border-radius: 9px;
+    background: #fafbfe;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 11px;
+}
+
+input:focus,
+select:focus {
+    border-color: #4f8cff;
+}
+
+.input-group input {
+    margin-bottom: 0;
+}
+
+
+/* ================= BUTTONS ================= */
+
+button {
+    border: none;
+    background: #4f8cff;
+    color: white;
+    padding: 12px 17px;
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+.primary-button {
+    width: 100%;
+    margin-top: 3px;
+}
+
+.clear-button {
+    background: #eef2f7;
+    color: #4d586b;
+}
+
+
+/* ================= ROOMMATES ================= */
+
+.roommate-list {
+    margin-top: 17px;
+}
+
+.roommate {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.person-circle {
+    width: 35px;
+    height: 35px;
+    background: #eaf1ff;
+    color: #4f8cff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 9px;
+    font-weight: bold;
+}
+
+.person-info {
+    display: flex;
+    align-items: center;
+}
+
+
+/* ================= EXPENSES ================= */
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 17px;
+}
+
+.section-heading p {
+    color: #788397;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.expense {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px 5px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.expense-title {
+    font-weight: bold;
+}
+
+.expense-info {
+    color: #7a8495;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.expense-amount {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+
+/* ================= BALANCES ================= */
+
+.balance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 13px;
+    margin-top: 18px;
+}
+
+.balance {
+    background: #f7f9fc;
+    padding: 18px;
+    border-radius: 11px;
+}
+
+.balance-name {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.gets {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.owes {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+
+/* ================= SETTLEMENT ================= */
+
+.settlement {
+    background: #111827;
+    color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+.settlement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settlement-header h2 {
+    font-size: 25px;
+}
+
+.settlement-header p:not(.small-title) {
+    color: #9ca8bb;
+    margin-top: 7px;
+}
+
+.algorithm-icon {
+    font-size: 55px;
+}
+
+.settlement-empty {
+    margin-top: 25px;
+    color: #aeb8ca;
+}
+
+.transaction {
+    background: #1d2636;
+    padding: 17px;
+    margin-top: 12px;
+    border-radius: 10px;
+    border-left: 4px solid #4f8cff;
+}
+
+.transaction strong {
+    color: white;
+}
+
+.transaction .amount {
+    color: #66a0ff;
+    font-weight: bold;
+}
+
+
+/* ================= EMPTY ================= */
+
+.empty {
+    color: #8b95a6;
+    text-align: center;
+    padding: 22px 5px;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #7b8596;
+    font-size: 13px;
+}
+
+footer strong {
+    color: #172033;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 750px) {
+
+    .navbar {
+        display: block;
+    }
+
+    .tagline {
+        margin-top: 7px;
+    }
+
+    .hero {
+        padding: 30px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .hero-icon {
+        display: none;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading {
+        display: block;
+    }
+
+    .section-heading button {
+        margin-top: 12px;
+    }
+
+}

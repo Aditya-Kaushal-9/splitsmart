@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SplitSmart - Expense Tracker</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="logo">
+            Split<span>Smart</span>
+        </div>
+
+        <div class="tagline">
+            Smart expenses. Simple settlements.
+        </div>
+    </header>
+
+
+    <!-- MAIN -->
+    <main>
+
+        <!-- HERO -->
+        <section class="hero">
+
+            <div>
+                <p class="small-title">ROOMMATE EXPENSE TRACKER</p>
+
+                <h1>
+                    Split expenses.<br>
+                    <span>Not friendships.</span>
+                </h1>
+
+                <p class="hero-text">
+                    Track shared expenses, calculate balances and
+                    settle everything with the minimum number of transactions.
+                </p>
+            </div>
+
+            <div class="hero-icon">
+                💰
+            </div>
+
+        </section>
+
+
+        <!-- STAT CARDS -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Total Expenses</p>
+                <h2 id="totalExpenses">₹0</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Roommates</p>
+                <h2 id="totalRoommates">0</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Transactions</p>
+                <h2 id="transactionCount">0</h2>
+            </div>
+
+        </section>
+
+
+        <!-- TWO COLUMNS -->
+        <section class="dashboard-grid">
+
+
+            <!-- ROOMMATES -->
+            <div class="card">
+
+                <div class="card-title">
+                    <h2>👥 Roommates</h2>
+                </div>
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        id="roommateName"
+                        placeholder="Enter roommate name"
+                    >
+
+                    <button onclick="addRoommate()">
+                        + Add
+                    </button>
+
+                </div>
+
+                <div id="roommateList" class="roommate-list">
+
+                    <p class="empty">
+                        No roommates added yet.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADD EXPENSE -->
+            <div class="card">
+
+                <h2>💸 Add Expense</h2>
+
+                <input
+                    type="text"
+                    id="expenseTitle"
+                    placeholder="Expense name (e.g. Groceries)"
+                >
+
+                <input
+                    type="number"
+                    id="expenseAmount"
+                    placeholder="Amount (₹)"
+                >
+
+                <select id="paidBy">
+
+                    <option value="">
+                        Who paid?
+                    </option>
+
+                </select>
+
+                <button
+                    class="primary-button"
+                    onclick="addExpense()"
+                >
+                    Add Expense
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- EXPENSE HISTORY -->
+        <section class="card">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>📋 Expense History</h2>
+
+                    <p>
+                        All shared expenses are recorded here.
+                    </p>
+                </div>
+
+                <button
+                    class="clear-button"
+                    onclick="clearExpenses()"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+            <div id="expenseList">
+
+                <p class="empty">
+                    No expenses added yet.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- BALANCES -->
+        <section class="card">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>📊 Current Balances</h2>
+
+                    <p>
+                        See who should receive or pay money.
+                    </p>
+                </div>
+
+                <button
+                    onclick="calculateSettlement()"
+                >
+                    Calculate
+                </button>
+
+            </div>
+
+            <div
+                id="balanceList"
+                class="balance-grid"
+            >
+
+                <p class="empty">
+                    Add expenses to calculate balances.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- SMART SETTLEMENT -->
+        <section class="settlement">
+
+            <div class="settlement-header">
+
+                <div>
+
+                    <p class="small-title">
+                        SMART ALGORITHM
+                    </p>
+
+                    <h2>⚡ Minimum Settlement</h2>
+
+                    <p>
+                        Our algorithm reduces unnecessary payments
+                        between roommates.
+                    </p>
+
+                </div>
+
+                <div class="algorithm-icon">
+                    🧠
+                </div>
+
+            </div>
+
+
+            <div id="settlementResult">
+
+                <div class="empty settlement-empty">
+                    Add expenses and click
+                    <b>Calculate</b> to generate
+                    the optimal settlement plan.
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <strong>SplitSmart</strong>
+
+        <p>
+            Built for School Hackathon 🚀
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+      
