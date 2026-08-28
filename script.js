@@ -276,7 +276,7 @@ function updateStats() {
 
 /* CALCULATE BALANCES */
 
-async function calculateSettlement() {
+function calculateSettlement() {
 
     if (roommates.length < 2) {
         alert("Please add at least 2 roommates!");
@@ -308,39 +308,10 @@ async function calculateSettlement() {
 
     showBalances(balances);
 
-    try {
+    const transactions =
+        minimizeTransactions(balances);
 
-        const response = await fetch(
-            "http://127.0.0.1:5000/settle",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    balances: balances
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error);
-        }
-
-        showSettlement(data.transactions);
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Could not connect to the Smart Settlement server."
-        );
-    }
+    showSettlement(transactions);
 }
 /* SHOW BALANCES */
 
