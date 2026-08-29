@@ -76,7 +76,81 @@
 
 
             <!-- ROOMMATES -->
-            <div class="card">
+            <!-- ROOMMATES -->
+<div class="card">
+
+    <h2>💸 Add Expense</h2>
+
+    <!-- EXPENSE CATEGORIES -->
+    <div class="category-wrapper">
+
+        ...
+        
+    </div>
+
+    <input
+        type="text"
+        id="expenseTitle"
+        placeholder="Expense name (e.g. Groceries)"
+    >
+
+    <input
+        type="number"
+        id="expenseAmount"
+        placeholder="Amount (₹)"
+    >
+
+    <select id="paidBy">
+
+        <option value="">
+            Who paid?
+        </option>
+
+    </select>
+
+    <button
+        class="primary-button"
+        onclick="addExpense()"
+    >
+        Add Expense
+    </button>
+
+</div>
+
+        <!-- ROOMMATES -->
+<div class="card">
+
+    <div class="card-title">
+        <h2>👥 Roommates</h2>
+    </div>
+
+    <div class="input-group">
+
+        <input
+            type="text"
+            id="roommateName"
+            placeholder="Enter roommate name"
+        >
+
+        <button onclick="addRoommate()">
+            + Add
+        </button>
+
+    </div>
+
+    <div id="roommateList" class="roommate-list">
+
+        <p class="empty">
+            No roommates added yet.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ADD EXPENSE -->
+<div class="card">
 
     <h2>💸 Add Expense</h2>
 
@@ -187,8 +261,6 @@
     </button>
 
 </div>
-
-        </section>
 
 
         <!-- EXPENSE HISTORY -->
