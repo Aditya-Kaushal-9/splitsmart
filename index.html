@@ -16,7 +16,9 @@
 
 <body>
 
-    <!-- NAVBAR -->
+    <!-- =========================
+         NAVBAR
+    ========================== -->
 
     <header class="navbar">
 
@@ -31,11 +33,15 @@
     </header>
 
 
-    <!-- MAIN -->
+    <!-- =========================
+         MAIN
+    ========================== -->
 
     <main>
 
-        <!-- HERO -->
+        <!-- =========================
+             HERO
+        ========================== -->
 
         <section class="hero">
 
@@ -65,7 +71,9 @@
         </section>
 
 
-        <!-- STATISTICS -->
+        <!-- =========================
+             STATISTICS
+        ========================== -->
 
         <section class="stats">
 
@@ -104,12 +112,16 @@
         </section>
 
 
-        <!-- ROOMMATES + EXPENSE -->
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
 
         <section class="dashboard-grid">
 
 
-            <!-- ROOMMATES -->
+            <!-- =========================
+                 ROOMMATES
+            ========================== -->
 
             <div class="card">
 
@@ -128,7 +140,9 @@
                         type="text"
                         id="roommateName"
                         placeholder="Enter roommate name"
+                        autocomplete="off"
                     >
+
 
                     <button
                         type="button"
@@ -154,7 +168,9 @@
             </div>
 
 
-            <!-- ADD EXPENSE -->
+            <!-- =========================
+                 ADD EXPENSE
+            ========================== -->
 
             <div class="card">
 
@@ -163,20 +179,26 @@
                 </h2>
 
 
-                <!-- CATEGORY SLIDER -->
+                <!-- =========================
+                     EXPENSE CATEGORY SLIDER
+                ========================== -->
 
                 <div class="category-wrapper">
 
+
+                    <!-- PREVIOUS -->
 
                     <button
                         type="button"
                         class="category-arrow"
                         onclick="slideCategories(-280)"
-                        aria-label="Previous categories"
+                        aria-label="Previous category"
                     >
                         ‹
                     </button>
 
+
+                    <!-- CATEGORY LIST -->
 
                     <div
                         class="category-scroll"
@@ -187,6 +209,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Food"
                             onclick="selectExpenseCategory('Food')"
                         >
                             🍔 Food
@@ -196,6 +219,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Groceries"
                             onclick="selectExpenseCategory('Groceries')"
                         >
                             🛒 Groceries
@@ -205,6 +229,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Transport"
                             onclick="selectExpenseCategory('Transport')"
                         >
                             🚕 Transport
@@ -214,6 +239,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Rent"
                             onclick="selectExpenseCategory('Rent')"
                         >
                             🏠 Rent
@@ -223,6 +249,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Utilities"
                             onclick="selectExpenseCategory('Utilities')"
                         >
                             💡 Utilities
@@ -232,6 +259,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="WiFi"
                             onclick="selectExpenseCategory('WiFi')"
                         >
                             📶 WiFi
@@ -241,6 +269,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Entertainment"
                             onclick="selectExpenseCategory('Entertainment')"
                         >
                             🎬 Entertainment
@@ -250,6 +279,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Medical"
                             onclick="selectExpenseCategory('Medical')"
                         >
                             💊 Medical
@@ -259,6 +289,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Household"
                             onclick="selectExpenseCategory('Household')"
                         >
                             🧹 Household
@@ -268,6 +299,7 @@
                         <button
                             type="button"
                             class="category"
+                            data-category="Other"
                             onclick="selectExpenseCategory('Other')"
                         >
                             📦 Other
@@ -277,11 +309,13 @@
                     </div>
 
 
+                    <!-- NEXT -->
+
                     <button
                         type="button"
                         class="category-arrow"
                         onclick="slideCategories(280)"
-                        aria-label="Next categories"
+                        aria-label="Next category"
                     >
                         ›
                     </button>
@@ -290,16 +324,21 @@
                 </div>
 
 
-                <!-- EXPENSE NAME -->
+                <!-- =========================
+                     EXPENSE NAME
+                ========================== -->
 
                 <input
                     type="text"
                     id="expenseTitle"
                     placeholder="Expense name (e.g. Groceries)"
+                    autocomplete="off"
                 >
 
 
-                <!-- AMOUNT -->
+                <!-- =========================
+                     AMOUNT
+                ========================== -->
 
                 <input
                     type="number"
@@ -307,10 +346,13 @@
                     placeholder="Amount (₹)"
                     min="0"
                     step="0.01"
+                    inputmode="decimal"
                 >
 
 
-                <!-- WHO PAID -->
+                <!-- =========================
+                     WHO PAID
+                ========================== -->
 
                 <select id="paidBy">
 
@@ -321,7 +363,9 @@
                 </select>
 
 
-                <!-- ADD EXPENSE -->
+                <!-- =========================
+                     ADD EXPENSE BUTTON
+                ========================== -->
 
                 <button
                     type="button"
@@ -336,7 +380,9 @@
         </section>
 
 
-        <!-- EXPENSE HISTORY -->
+        <!-- =========================
+             EXPENSE HISTORY
+        ========================== -->
 
         <section class="card">
 
@@ -377,7 +423,9 @@
         </section>
 
 
-        <!-- CURRENT BALANCES -->
+        <!-- =========================
+             CURRENT BALANCES
+        ========================== -->
 
         <section class="card">
 
@@ -420,7 +468,9 @@
         </section>
 
 
-        <!-- SMART SETTLEMENT -->
+        <!-- =========================
+             SMART SETTLEMENT
+        ========================== -->
 
         <section class="settlement">
 
@@ -432,9 +482,11 @@
                         SMART ALGORITHM
                     </p>
 
+
                     <h2>
                         ⚡ Minimum Settlement
                     </h2>
+
 
                     <p>
                         Our algorithm reduces unnecessary
@@ -466,10 +518,13 @@
 
         </section>
 
+
     </main>
 
 
-    <!-- FOOTER -->
+    <!-- =========================
+         FOOTER
+    ========================== -->
 
     <footer>
 
@@ -483,6 +538,10 @@
 
     </footer>
 
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
 
     <script src="script.js"></script>
 
