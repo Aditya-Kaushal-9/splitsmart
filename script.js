@@ -1,171 +1,40 @@
-/* =========================================================
-   SPLITSMART
-   Roommate Expense Tracker
-   Browser Storage + Smart Settlement
-   ========================================================= */
+let roommates = [];
+let expenses = [];
 
 
-/* =========================
-   LOAD SAVED DATA
-   ========================= */
-
-let roommates =
-    JSON.parse(localStorage.getItem("splitsmart_roommates")) || [];
-
-let expenses =
-    JSON.parse(localStorage.getItem("splitsmart_expenses")) || [];
-
-
-    /* =========================
-   EXPENSE CATEGORY SELECTOR
-   ========================= */
-
-function selectExpenseCategory(category) {
-
-    const expenseTitle =
-        document.getElementById("expenseTitle");
-
-    expenseTitle.value =
-        category.replace(/^.+?\s/, "");
-
-    expenseTitle.focus();
-}
-/* =========================
-   SAVE DATA
-   ========================= */
-
-function saveData() {
-
-    localStorage.setItem(
-        "splitsmart_roommates",
-        JSON.stringify(roommates)
-    );
-
-    localStorage.setItem(
-        "splitsmart_expenses",
-        JSON.stringify(expenses)
-    );
-}
-
-
-/* =========================
-   PAGE STARTUP
-   ========================= */
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    updateRoommateList();
-    updatePaidBy();
-    updateExpenseList();
-    updateStats();
-
-});
-
-
-/* =========================
-   ADD ROOMMATE
-   ========================= */
+/* ADD ROOMMATE */
 
 function addRoommate() {
 
-    const input =
-        document.getElementById("roommateName");
-
-    const name =
-        input.value.trim();
-
+    const input = document.getElementById("roommateName");
+    const name = input.value.trim();
 
     if (name === "") {
-
         alert("Please enter a roommate name!");
-
         return;
     }
-
 
     if (roommates.includes(name)) {
-
         alert("This roommate already exists!");
-
         return;
     }
 
-
     roommates.push(name);
-
-    saveData();
 
     input.value = "";
 
     updateRoommateList();
     updatePaidBy();
     updateStats();
-
 }
 
 
-/* =========================
-   REMOVE ROOMMATE
-   ========================= */
-
-function removeRoommate(index) {
-
-    const person =
-        roommates[index];
-
-
-    /* Check whether this roommate
-       is connected to an expense */
-
-    const usedInExpense =
-        expenses.some(
-            expense =>
-                expense.paidBy === person
-        );
-
-
-    if (usedInExpense) {
-
-        alert(
-            `${person} cannot be removed because they have paid an expense. Delete their expense first.`
-        );
-
-        return;
-    }
-
-
-    const confirmRemove =
-        confirm(
-            `Remove ${person} from the roommates list?`
-        );
-
-
-    if (!confirmRemove) {
-        return;
-    }
-
-
-    roommates.splice(index, 1);
-
-    saveData();
-
-    updateRoommateList();
-    updatePaidBy();
-    updateStats();
-
-    resetCalculationDisplay();
-}
-
-
-/* =========================
-   UPDATE ROOMMATE LIST
-   ========================= */
+/* UPDATE ROOMMATE LIST */
 
 function updateRoommateList() {
 
     const list =
         document.getElementById("roommateList");
-
 
     if (roommates.length === 0) {
 
@@ -178,112 +47,127 @@ function updateRoommateList() {
         return;
     }
 
-
     list.innerHTML = "";
 
+    roommates.forEach((person, index) => {
 
-    roommates.forEach(
-        (person, index) => {
+        list.innerHTML += `
 
-            list.innerHTML += `
+            <div class="roommate">
 
-                <div class="roommate">
+                <div class="person-info">
 
-                    <div class="person-info">
-
-                        <div class="person-circle">
-                            ${person
-                                .charAt(0)
-                                .toUpperCase()}
-                        </div>
-
-                        <strong>
-                            ${person}
-                        </strong>
-
+                    <div class="person-circle">
+                        ${person.charAt(0).toUpperCase()}
                     </div>
 
-
-                    <button
-                        class="delete-button"
-                        onclick="removeRoommate(${index})"
-                    >
-                        🗑️
-                    </button>
+                    <strong>${person}</strong>
 
                 </div>
 
-            `;
-        }
-    );
+                <button
+                    class="delete-button"
+                    onclick="removeRoommate(${index})"
+                >
+                    🗑️
+                </button>
+
+            </div>
+
+        `;
+    });
 }
+function removeRoommate(index) {
 
+    const person = roommates[index];
 
-/* =========================
-   UPDATE PAID BY
-   ========================= */
+    const usedInExpense =
+        expenses.some(
+            expense => expense.paidBy === person
+        );
+
+    if (usedInExpense) {
+
+        alert(
+            `${person} cannot be removed because they have paid an expense. Delete their expense first.`
+        );
+
+        return;
+    }
+
+    const confirmRemove =
+        confirm(
+            `Remove ${person} from the roommates list?`
+        );
+
+    if (!confirmRemove) {
+        return;
+    }
+
+    roommates.splice(index, 1);
+
+    updateRoommateList();
+    updatePaidBy();
+    updateStats();
+
+    document.getElementById("balanceList").innerHTML = `
+        <p class="empty">
+            Add expenses to calculate balances.
+        </p>
+    `;
+
+    document.getElementById("settlementResult").innerHTML = `
+        <div class="empty settlement-empty">
+            Add expenses and click
+            <b>Calculate</b>
+            to generate the optimal settlement plan.
+        </div>
+    `;
+}
 
 function updatePaidBy() {
 
     const select =
         document.getElementById("paidBy");
 
-
     select.innerHTML =
-        `<option value="">
-            Who paid?
-        </option>`;
-
+        `<option value="">Who paid?</option>`;
 
     roommates.forEach(person => {
 
         select.innerHTML += `
-
             <option value="${person}">
                 ${person}
             </option>
-
         `;
-
     });
 }
 
 
-/* =========================
-   ADD EXPENSE
-   ========================= */
+/* ADD EXPENSE */
 
 function addExpense() {
 
-    if (roommates.length < 2) {
-
-        alert(
-            "Please add at least 2 roommates!"
-        );
-
-        return;
-    }
-
-
     const title =
-        document
-            .getElementById("expenseTitle")
-            .value
-            .trim();
-
+        document.getElementById("expenseTitle")
+        .value.trim();
 
     const amount =
         Number(
-            document
-                .getElementById("expenseAmount")
-                .value
+            document.getElementById("expenseAmount")
+            .value
         );
 
-
     const paidBy =
-        document
-            .getElementById("paidBy")
-            .value;
+        document.getElementById("paidBy").value;
+
+
+    if (roommates.length < 2) {
+
+        alert("Please add at least 2 roommates!");
+
+        return;
+    }
 
 
     if (
@@ -292,9 +176,7 @@ function addExpense() {
         paidBy === ""
     ) {
 
-        alert(
-            "Please fill all expense details!"
-        );
+        alert("Please fill all expense details!");
 
         return;
     }
@@ -303,80 +185,28 @@ function addExpense() {
     expenses.push({
 
         title: title,
-
         amount: amount,
-
         paidBy: paidBy
 
     });
 
 
-    saveData();
-
-
-    document
-        .getElementById("expenseTitle")
-        .value = "";
-
-
-    document
-        .getElementById("expenseAmount")
-        .value = "";
-
-
-    document
-        .getElementById("paidBy")
-        .value = "";
+    document.getElementById("expenseTitle").value = "";
+    document.getElementById("expenseAmount").value = "";
+    document.getElementById("paidBy").value = "";
 
 
     updateExpenseList();
     updateStats();
-
-    resetCalculationDisplay();
 }
 
 
-/* =========================
-   REMOVE EXPENSE
-   ========================= */
-
-function removeExpense(index) {
-
-    const expense =
-        expenses[index];
-
-
-    const confirmRemove =
-        confirm(
-            `Delete "${expense.title}"?`
-        );
-
-
-    if (!confirmRemove) {
-        return;
-    }
-
-
-    expenses.splice(index, 1);
-
-    saveData();
-
-    updateExpenseList();
-    updateStats();
-
-    resetCalculationDisplay();
-}
-
-
-/* =========================
-   UPDATE EXPENSE LIST
-   ========================= */
+/* UPDATE EXPENSE LIST */
 
 function updateExpenseList() {
 
     const list =
         document.getElementById("expenseList");
-
 
     if (expenses.length === 0) {
 
@@ -389,63 +219,82 @@ function updateExpenseList() {
         return;
     }
 
-
     list.innerHTML = "";
 
+    expenses.forEach((expense, index) => {
 
-    expenses.forEach(
-        (expense, index) => {
+        list.innerHTML += `
 
-            list.innerHTML += `
+            <div class="expense">
 
-                <div class="expense">
+                <div>
 
-                    <div>
-
-                        <div class="expense-title">
-                            ${expense.title}
-                        </div>
-
-                        <div class="expense-info">
-                            Paid by ${expense.paidBy}
-                        </div>
-
+                    <div class="expense-title">
+                        ${expense.title}
                     </div>
 
-
-                    <div
-                        style="
-                            display:flex;
-                            align-items:center;
-                            gap:12px;
-                        "
-                    >
-
-                        <div class="expense-amount">
-                            ₹${expense.amount.toFixed(2)}
-                        </div>
-
-
-                        <button
-                            class="delete-button"
-                            onclick="removeExpense(${index})"
-                        >
-                            🗑️
-                        </button>
-
+                    <div class="expense-info">
+                        Paid by ${expense.paidBy}
                     </div>
 
                 </div>
 
-            `;
-        }
-    );
+                <div style="display:flex; align-items:center; gap:12px;">
+
+                    <div class="expense-amount">
+                        ₹${expense.amount.toFixed(2)}
+                    </div>
+
+                    <button
+                        class="delete-button"
+                        onclick="removeExpense(${index})"
+                    >
+                        🗑️
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
 }
+function removeExpense(index) {
 
+    const expense = expenses[index];
 
-/* =========================
-   CLEAR ALL EXPENSES
-   ========================= */
+    const confirmRemove =
+        confirm(
+            `Delete "${expense.title}"?`
+        );
+
+    if (!confirmRemove) {
+        return;
+    }
+
+    expenses.splice(index, 1);
+
+    updateExpenseList();
+    updateStats();
+
+    document.getElementById("balanceList").innerHTML = `
+        <p class="empty">
+            Add expenses to calculate balances.
+        </p>
+    `;
+
+    document.getElementById("settlementResult").innerHTML = `
+        <div class="empty settlement-empty">
+            Add expenses and click
+            <b>Calculate</b>
+            to generate the optimal settlement plan.
+        </div>
+    `;
+
+    document.getElementById("transactionCount")
+        .textContent = "0";
+}
 
 function clearExpenses() {
 
@@ -453,32 +302,40 @@ function clearExpenses() {
         return;
     }
 
-
-    const confirmed =
+    const confirmClear =
         confirm(
             "Are you sure you want to clear all expenses?"
         );
 
 
-    if (!confirmed) {
-        return;
+    if (confirmClear) {
+
+        expenses = [];
+
+        updateExpenseList();
+        updateStats();
+
+        document.getElementById("balanceList").innerHTML = `
+            <p class="empty">
+                Add expenses to calculate balances.
+            </p>
+        `;
+
+
+        document.getElementById("settlementResult").innerHTML = `
+            <div class="empty settlement-empty">
+
+                Add expenses and click
+                <b>Calculate</b>
+                to generate the optimal settlement plan.
+
+            </div>
+        `;
     }
-
-
-    expenses = [];
-
-    saveData();
-
-    updateExpenseList();
-    updateStats();
-
-    resetCalculationDisplay();
 }
 
 
-/* =========================
-   UPDATE STATISTICS
-   ========================= */
+/* UPDATE TOP STATS */
 
 function updateStats() {
 
@@ -500,92 +357,55 @@ function updateStats() {
         "totalRoommates"
     ).textContent =
         roommates.length;
+
 }
 
 
-/* =========================
-   CALCULATE SETTLEMENT
-   ========================= */
+/* CALCULATE BALANCES */
 
 function calculateSettlement() {
 
     if (roommates.length < 2) {
-
-        alert(
-            "Please add at least 2 roommates!"
-        );
-
+        alert("Please add at least 2 roommates!");
         return;
     }
-
 
     if (expenses.length === 0) {
-
-        alert(
-            "Please add at least one expense!"
-        );
-
+        alert("Please add at least one expense!");
         return;
     }
-
 
     let balances = {};
 
-
     roommates.forEach(person => {
-
         balances[person] = 0;
-
     });
-
 
     expenses.forEach(expense => {
 
         const share =
-            expense.amount /
-            roommates.length;
-
+            expense.amount / roommates.length;
 
         roommates.forEach(person => {
-
-            balances[person] -=
-                share;
-
+            balances[person] -= share;
         });
 
-
-        balances[expense.paidBy] +=
-            expense.amount;
-
+        balances[expense.paidBy] += expense.amount;
     });
-
 
     showBalances(balances);
 
-
     const transactions =
-        minimizeTransactions(
-            balances
-        );
+        minimizeTransactions(balances);
 
-
-    showSettlement(
-        transactions
-    );
-
+    showSettlement(transactions);
 }
-
-
-/* =========================
-   SHOW BALANCES
-   ========================= */
+/* SHOW BALANCES */
 
 function showBalances(balances) {
 
     const balanceList =
-        document.getElementById(
-            "balanceList"
-        );
+        document.getElementById("balanceList");
 
 
     balanceList.innerHTML = "";
@@ -594,10 +414,9 @@ function showBalances(balances) {
     Object.entries(balances).forEach(
         ([person, balance]) => {
 
+
             const roundedBalance =
-                Math.round(
-                    balance * 100
-                ) / 100;
+                Math.round(balance * 100) / 100;
 
 
             let status = "";
@@ -628,6 +447,8 @@ function showBalances(balances) {
 
                 status = "Settled";
 
+                className = "";
+
             }
 
 
@@ -653,28 +474,20 @@ function showBalances(balances) {
 }
 
 
-/* =========================
-   MINIMUM TRANSACTION
-   ALGORITHM
-   ========================= */
+/* MINIMUM TRANSACTION ALGORITHM */
 
-function minimizeTransactions(
-    balances
-) {
+function minimizeTransactions(balances) {
 
     let debtors = [];
     let creditors = [];
 
 
-    Object.entries(
-        balances
-    ).forEach(
+    Object.entries(balances).forEach(
         ([person, amount]) => {
 
+
             amount =
-                Math.round(
-                    amount * 100
-                ) / 100;
+                Math.round(amount * 100) / 100;
 
 
             if (amount < -0.01) {
@@ -682,9 +495,7 @@ function minimizeTransactions(
                 debtors.push({
 
                     name: person,
-
-                    amount:
-                        Math.abs(amount)
+                    amount: Math.abs(amount)
 
                 });
 
@@ -696,7 +507,6 @@ function minimizeTransactions(
                 creditors.push({
 
                     name: person,
-
                     amount: amount
 
                 });
@@ -709,31 +519,24 @@ function minimizeTransactions(
 
     let transactions = [];
 
-
     let debtorIndex = 0;
     let creditorIndex = 0;
 
 
     while (
 
-        debtorIndex <
-            debtors.length &&
-
-        creditorIndex <
-            creditors.length
+        debtorIndex < debtors.length &&
+        creditorIndex < creditors.length
 
     ) {
+
 
         const payment =
             Math.min(
 
-                debtors[
-                    debtorIndex
-                ].amount,
+                debtors[debtorIndex].amount,
 
-                creditors[
-                    creditorIndex
-                ].amount
+                creditors[creditorIndex].amount
 
             );
 
@@ -741,37 +544,26 @@ function minimizeTransactions(
         transactions.push({
 
             from:
-                debtors[
-                    debtorIndex
-                ].name,
+                debtors[debtorIndex].name,
 
             to:
-                creditors[
-                    creditorIndex
-                ].name,
+                creditors[creditorIndex].name,
 
             amount:
-                Math.round(
-                    payment * 100
-                ) / 100
+                Math.round(payment * 100) / 100
 
         });
 
 
-        debtors[
-            debtorIndex
-        ].amount -= payment;
+        debtors[debtorIndex].amount -=
+            payment;
 
-
-        creditors[
-            creditorIndex
-        ].amount -= payment;
+        creditors[creditorIndex].amount -=
+            payment;
 
 
         if (
-            debtors[
-                debtorIndex
-            ].amount < 0.01
+            debtors[debtorIndex].amount < 0.01
         ) {
 
             debtorIndex++;
@@ -780,9 +572,7 @@ function minimizeTransactions(
 
 
         if (
-            creditors[
-                creditorIndex
-            ].amount < 0.01
+            creditors[creditorIndex].amount < 0.01
         ) {
 
             creditorIndex++;
@@ -793,16 +583,13 @@ function minimizeTransactions(
 
 
     return transactions;
+
 }
 
 
-/* =========================
-   SHOW SETTLEMENT
-   ========================= */
+/* SHOW SETTLEMENT */
 
-function showSettlement(
-    transactions
-) {
+function showSettlement(transactions) {
 
     const result =
         document.getElementById(
@@ -816,9 +603,7 @@ function showSettlement(
         transactions.length;
 
 
-    if (
-        transactions.length === 0
-    ) {
+    if (transactions.length === 0) {
 
         result.innerHTML = `
 
@@ -831,77 +616,37 @@ function showSettlement(
         `;
 
         return;
+
     }
 
 
     result.innerHTML = "";
 
 
-    transactions.forEach(
-        transaction => {
+    transactions.forEach(transaction => {
 
-            result.innerHTML += `
+        result.innerHTML += `
 
-                <div class="transaction">
+            <div class="transaction">
 
-                    <strong>
-                        ${transaction.from}
-                    </strong>
+                <strong>
+                    ${transaction.from}
+                </strong>
 
-                    pays
+                pays
 
-                    <strong>
-                        ${transaction.to}
-                    </strong>
+                <strong>
+                    ${transaction.to}
+                </strong>
 
-                    <span class="amount">
-                        →
-                        ₹${transaction.amount.toFixed(2)}
-                    </span>
+                <span class="amount">
+                    → ₹${transaction.amount.toFixed(2)}
+                </span>
 
-                </div>
+            </div>
 
-            `;
+        `;
 
-        }
-    );
-}
+    });
 
-
-/* =========================
-   RESET CALCULATION DISPLAY
-   ========================= */
-
-function resetCalculationDisplay() {
-
-    document.getElementById(
-        "balanceList"
-    ).innerHTML = `
-
-        <p class="empty">
-            Add expenses to calculate balances.
-        </p>
-
-    `;
-
-
-    document.getElementById(
-        "settlementResult"
-    ).innerHTML = `
-
-        <div class="empty settlement-empty">
-
-            Add expenses and click
-            <b>Calculate</b>
-            to generate the optimal
-            settlement plan.
-
-        </div>
-
-    `;
-
-
-    document.getElementById(
-        "transactionCount"
-    ).textContent = "0";
 }
