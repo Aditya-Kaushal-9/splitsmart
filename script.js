@@ -16,6 +16,20 @@ let expenses =
     JSON.parse(localStorage.getItem("splitsmart_expenses")) || [];
 
 
+    /* =========================
+   EXPENSE CATEGORY SELECTOR
+   ========================= */
+
+function selectExpenseCategory(category) {
+
+    const expenseTitle =
+        document.getElementById("expenseTitle");
+
+    expenseTitle.value =
+        category.replace(/^.+?\s/, "");
+
+    expenseTitle.focus();
+}
 /* =========================
    SAVE DATA
    ========================= */

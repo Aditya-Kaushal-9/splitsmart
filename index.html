@@ -78,68 +78,115 @@
             <!-- ROOMMATES -->
             <div class="card">
 
-                <div class="card-title">
-                    <h2>👥 Roommates</h2>
-                </div>
+    <h2>💸 Add Expense</h2>
 
-                <div class="input-group">
+    <!-- EXPENSE CATEGORIES -->
+    <div class="category-wrapper">
 
-                    <input
-                        type="text"
-                        id="roommateName"
-                        placeholder="Enter roommate name"
-                    >
+        <div class="category-scroll">
 
-                    <button onclick="addRoommate()">
-                        + Add
-                    </button>
+            <button
+                class="category"
+                onclick="selectExpenseCategory('🍔 Food')"
+            >
+                🍔 Food
+            </button>
 
-                </div>
+            <button
+                class="category"
+                onclick="selectExpenseCategory('🛒 Groceries')"
+            >
+                🛒 Groceries
+            </button>
 
-                <div id="roommateList" class="roommate-list">
+            <button
+                class="category"
+                onclick="selectExpenseCategory('🚕 Transport')"
+            >
+                🚕 Transport
+            </button>
 
-                    <p class="empty">
-                        No roommates added yet.
-                    </p>
+            <button
+                class="category"
+                onclick="selectExpenseCategory('🏠 Rent')"
+            >
+                🏠 Rent
+            </button>
 
-                </div>
+            <button
+                class="category"
+                onclick="selectExpenseCategory('💡 Utilities')"
+            >
+                💡 Utilities
+            </button>
 
-            </div>
+            <button
+                class="category"
+                onclick="selectExpenseCategory('📶 WiFi')"
+            >
+                📶 WiFi
+            </button>
 
+            <button
+                class="category"
+                onclick="selectExpenseCategory('🎬 Entertainment')"
+            >
+                🎬 Entertainment
+            </button>
 
-            <!-- ADD EXPENSE -->
-            <div class="card">
+            <button
+                class="category"
+                onclick="selectExpenseCategory('💊 Medical')"
+            >
+                💊 Medical
+            </button>
 
-                <h2>💸 Add Expense</h2>
+            <button
+                class="category"
+                onclick="selectExpenseCategory('🧹 Household')"
+            >
+                🧹 Household
+            </button>
 
-                <input
-                    type="text"
-                    id="expenseTitle"
-                    placeholder="Expense name (e.g. Groceries)"
-                >
+            <button
+                class="category"
+                onclick="selectExpenseCategory('📦 Other')"
+            >
+                📦 Other
+            </button>
 
-                <input
-                    type="number"
-                    id="expenseAmount"
-                    placeholder="Amount (₹)"
-                >
+        </div>
 
-                <select id="paidBy">
+    </div>
 
-                    <option value="">
-                        Who paid?
-                    </option>
+    <input
+        type="text"
+        id="expenseTitle"
+        placeholder="Expense name (e.g. Groceries)"
+    >
 
-                </select>
+    <input
+        type="number"
+        id="expenseAmount"
+        placeholder="Amount (₹)"
+    >
 
-                <button
-                    class="primary-button"
-                    onclick="addExpense()"
-                >
-                    Add Expense
-                </button>
+    <select id="paidBy">
 
-            </div>
+        <option value="">
+            Who paid?
+        </option>
+
+    </select>
+
+    <button
+        class="primary-button"
+        onclick="addExpense()"
+    >
+        Add Expense
+    </button>
+
+</div>
 
         </section>
 
