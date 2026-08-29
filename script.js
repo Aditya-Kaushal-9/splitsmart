@@ -37,6 +37,22 @@ function selectExpenseCategory(category) {
     expenseTitle.value = category;
 
     expenseTitle.focus();
+
+    /* Highlight selected category */
+
+    document
+        .querySelectorAll(".category")
+        .forEach(button => {
+
+            button.classList.remove("selected");
+
+            if (
+                button.dataset.category === category
+            ) {
+                button.classList.add("selected");
+            }
+
+        });
 }
 
 
@@ -68,6 +84,8 @@ document.addEventListener(
     "DOMContentLoaded",
     async function () {
 
+        setupCategoryButtons();
+
         await loadRoommates();
 
         await loadExpenses();
@@ -78,6 +96,50 @@ document.addEventListener(
 
     }
 );
+
+
+/* =========================
+   CATEGORY BUTTON SETUP
+   ========================= */
+
+function setupCategoryButtons() {
+
+    const categoryButtons =
+        document.querySelectorAll(
+            ".category"
+        );
+
+
+    categoryButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    const category =
+                        button.dataset.category ||
+                        button.textContent
+                            .trim()
+                            .replace(
+                                /^[^\w]+/,
+                                ""
+                            );
+
+                    selectExpenseCategory(
+                        category
+                    );
+
+                }
+            );
+
+        }
+    );
+}
 
 
 /* =========================
@@ -103,8 +165,14 @@ async function loadRoommates() {
         }
 
 
-        roommates =
+        const data =
             await response.json();
+
+
+        roommates =
+            Array.isArray(data)
+                ? data
+                : [];
 
 
         updateRoommateList();
@@ -165,8 +233,14 @@ async function loadExpenses() {
         }
 
 
-        expenses =
+        const data =
             await response.json();
+
+
+        expenses =
+            Array.isArray(data)
+                ? data
+                : [];
 
 
         updateExpenseList();
@@ -229,6 +303,8 @@ async function addRoommate() {
             "Please enter a roommate name."
         );
 
+        input.focus();
+
         return;
     }
 
@@ -287,7 +363,6 @@ async function addRoommate() {
         );
 
     }
-
 }
 
 
@@ -363,7 +438,6 @@ async function removeRoommate(index) {
         );
 
     }
-
 }
 
 
@@ -402,53 +476,96 @@ function updateRoommateList() {
     roommates.forEach(
         (person, index) => {
 
-            const safeName =
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "roommate";
+
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "person-info";
+
+
+            const circle =
+                document.createElement(
+                    "div"
+                );
+
+            circle.className =
+                "person-circle";
+
+
+            circle.textContent =
                 String(person.name)
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;");
+                    .charAt(0)
+                    .toUpperCase();
 
 
-            list.innerHTML += `
-
-                <div class="roommate">
-
-                    <div class="person-info">
-
-                        <div class="person-circle">
-
-                            ${safeName
-                                .charAt(0)
-                                .toUpperCase()}
-
-                        </div>
-
-                        <strong>
-                            ${safeName}
-                        </strong>
-
-                    </div>
+            const name =
+                document.createElement(
+                    "strong"
+                );
 
 
-                    <button
-                        type="button"
-                        class="delete-button"
-                        onclick="removeRoommate(${index})"
-                    >
-                        🗑️
-                    </button>
+            name.textContent =
+                person.name;
 
-                </div>
 
-            `;
+            info.appendChild(circle);
+
+            info.appendChild(name);
+
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            deleteButton.type =
+                "button";
+
+
+            deleteButton.className =
+                "delete-button";
+
+
+            deleteButton.textContent =
+                "🗑️";
+
+
+            deleteButton.addEventListener(
+                "click",
+                function () {
+                    removeRoommate(index);
+                }
+            );
+
+
+            row.appendChild(info);
+
+            row.appendChild(
+                deleteButton
+            );
+
+
+            list.appendChild(row);
 
         }
     );
-
 }
 
 
 /* =========================
-   UPDATE PAID-BY DROPDOWN
+   UPDATE PAID BY
    ========================= */
 
 function updatePaidBy() {
@@ -481,7 +598,7 @@ function updatePaidBy() {
 
 
             option.value =
-                person.id;
+                String(person.id);
 
 
             option.textContent =
@@ -494,7 +611,6 @@ function updatePaidBy() {
 
         }
     );
-
 }
 
 
@@ -538,8 +654,11 @@ async function addExpense() {
         !paidByInput
     ) {
 
-        return;
+        console.error(
+            "Expense form elements not found."
+        );
 
+        return;
     }
 
 
@@ -625,8 +744,16 @@ async function addExpense() {
         paidByInput.value = "";
 
 
-        await loadExpenses();
+        document
+            .querySelectorAll(".category")
+            .forEach(button => {
+                button.classList.remove(
+                    "selected"
+                );
+            });
 
+
+        await loadExpenses();
 
         resetCalculationDisplay();
 
@@ -644,7 +771,6 @@ async function addExpense() {
         );
 
     }
-
 }
 
 
@@ -702,7 +828,6 @@ async function removeExpense(index) {
 
         await loadExpenses();
 
-
         resetCalculationDisplay();
 
 
@@ -719,7 +844,6 @@ async function removeExpense(index) {
         );
 
     }
-
 }
 
 
@@ -867,7 +991,9 @@ function updateExpenseList() {
 
             right.appendChild(amount);
 
-            right.appendChild(deleteButton);
+            right.appendChild(
+                deleteButton
+            );
 
 
             row.appendChild(info);
@@ -879,7 +1005,6 @@ function updateExpenseList() {
 
         }
     );
-
 }
 
 
@@ -907,9 +1032,13 @@ async function clearExpenses() {
 
     try {
 
+        const expenseCopy =
+            [...expenses];
+
+
         for (
             const expense
-            of [...expenses]
+            of expenseCopy
         ) {
 
             const response =
@@ -950,7 +1079,6 @@ async function clearExpenses() {
         );
 
     }
-
 }
 
 
@@ -995,7 +1123,6 @@ function updateStats() {
             roommates.length;
 
     }
-
 }
 
 
@@ -1068,7 +1195,6 @@ async function calculateSettlement() {
         );
 
     }
-
 }
 
 
@@ -1116,7 +1242,6 @@ async function loadBalances() {
         );
 
     }
-
 }
 
 
@@ -1141,7 +1266,7 @@ function showBalances(balances) {
 
 
     Object.entries(
-        balances
+        balances || {}
     ).forEach(
         ([person, balance]) => {
 
@@ -1151,12 +1276,18 @@ function showBalances(balances) {
                 ) / 100;
 
 
-            let status = "";
+            let status =
+                "Settled";
 
-            let className = "";
+
+            let className =
+                "";
 
 
-            if (roundedBalance > 0.01) {
+            if (
+                roundedBalance >
+                0.01
+            ) {
 
                 status =
                     `Gets ₹${roundedBalance.toFixed(2)}`;
@@ -1166,8 +1297,10 @@ function showBalances(balances) {
 
             }
 
+
             else if (
-                roundedBalance < -0.01
+                roundedBalance <
+                -0.01
             ) {
 
                 status =
@@ -1177,13 +1310,6 @@ function showBalances(balances) {
 
                 className =
                     "owes";
-
-            }
-
-            else {
-
-                status =
-                    "Settled";
 
             }
 
@@ -1206,7 +1332,6 @@ function showBalances(balances) {
 
         }
     );
-
 }
 
 
@@ -1235,17 +1360,24 @@ function showSettlement(
     }
 
 
+    const safeTransactions =
+        Array.isArray(
+            transactions
+        )
+            ? transactions
+            : [];
+
+
     if (transactionCount) {
 
         transactionCount.textContent =
-            transactions.length;
+            safeTransactions.length;
 
     }
 
 
     if (
-        !transactions ||
-        transactions.length === 0
+        safeTransactions.length === 0
     ) {
 
         result.innerHTML = `
@@ -1265,7 +1397,7 @@ function showSettlement(
     result.innerHTML = "";
 
 
-    transactions.forEach(
+    safeTransactions.forEach(
         transaction => {
 
             result.innerHTML += `
@@ -1297,7 +1429,6 @@ function showSettlement(
 
         }
     );
-
 }
 
 
@@ -1330,9 +1461,7 @@ function resetCalculationDisplay() {
         balanceList.innerHTML = `
 
             <p class="empty">
-
                 Add expenses to calculate balances.
-
             </p>
 
         `;
