@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SplitSmart - Expense Tracker</title>
 
@@ -16,12 +11,8 @@
 
 <body>
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
-
+    <!-- NAVBAR -->
     <header class="navbar">
-
         <div class="logo">
             Split<span>Smart</span>
         </div>
@@ -29,27 +20,17 @@
         <div class="tagline">
             Smart expenses. Simple settlements.
         </div>
-
     </header>
 
 
-    <!-- =========================
-         MAIN
-    ========================== -->
-
+    <!-- MAIN -->
     <main>
 
-        <!-- =========================
-             HERO
-        ========================== -->
-
+        <!-- HERO -->
         <section class="hero">
 
             <div>
-
-                <p class="small-title">
-                    ROOMMATE EXPENSE TRACKER
-                </p>
+                <p class="small-title">ROOMMATE EXPENSE TRACKER</p>
 
                 <h1>
                     Split expenses.<br>
@@ -57,11 +38,9 @@
                 </h1>
 
                 <p class="hero-text">
-                    Track shared expenses, calculate balances
-                    and settle everything with the minimum
-                    number of transactions.
+                    Track shared expenses, calculate balances and
+                    settle everything with the minimum number of transactions.
                 </p>
-
             </div>
 
             <div class="hero-icon">
@@ -71,68 +50,37 @@
         </section>
 
 
-        <!-- =========================
-             STATISTICS
-        ========================== -->
-
+        <!-- STAT CARDS -->
         <section class="stats">
 
             <div class="stat-card">
-
                 <p>Total Expenses</p>
-
-                <h2 id="totalExpenses">
-                    ₹0.00
-                </h2>
-
+                <h2 id="totalExpenses">₹0</h2>
             </div>
 
-
             <div class="stat-card">
-
                 <p>Roommates</p>
-
-                <h2 id="totalRoommates">
-                    0
-                </h2>
-
+                <h2 id="totalRoommates">0</h2>
             </div>
 
-
             <div class="stat-card">
-
                 <p>Transactions</p>
-
-                <h2 id="transactionCount">
-                    0
-                </h2>
-
+                <h2 id="transactionCount">0</h2>
             </div>
 
         </section>
 
 
-        <!-- =========================
-             DASHBOARD
-        ========================== -->
-
+        <!-- TWO COLUMNS -->
         <section class="dashboard-grid">
 
 
-            <!-- =========================
-                 ROOMMATES
-            ========================== -->
-
+            <!-- ROOMMATES -->
             <div class="card">
 
                 <div class="card-title">
-
-                    <h2>
-                        👥 Roommates
-                    </h2>
-
+                    <h2>👥 Roommates</h2>
                 </div>
-
 
                 <div class="input-group">
 
@@ -140,24 +88,15 @@
                         type="text"
                         id="roommateName"
                         placeholder="Enter roommate name"
-                        autocomplete="off"
                     >
 
-
-                    <button
-                        type="button"
-                        onclick="addRoommate()"
-                    >
+                    <button onclick="addRoommate()">
                         + Add
                     </button>
 
                 </div>
 
-
-                <div
-                    id="roommateList"
-                    class="roommate-list"
-                >
+                <div id="roommateList" class="roommate-list">
 
                     <p class="empty">
                         No roommates added yet.
@@ -168,191 +107,22 @@
             </div>
 
 
-            <!-- =========================
-                 ADD EXPENSE
-            ========================== -->
-
+            <!-- ADD EXPENSE -->
             <div class="card">
 
-                <h2>
-                    💸 Add Expense
-                </h2>
-
-
-                <!-- =========================
-                     EXPENSE CATEGORY SLIDER
-                ========================== -->
-
-                <div class="category-wrapper">
-
-
-                    <!-- PREVIOUS -->
-
-                    <button
-                        type="button"
-                        class="category-arrow"
-                        onclick="slideCategories(-280)"
-                        aria-label="Previous category"
-                    >
-                        ‹
-                    </button>
-
-
-                    <!-- CATEGORY LIST -->
-
-                    <div
-                        class="category-scroll"
-                        id="categoryScroll"
-                    >
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Food"
-                            onclick="selectExpenseCategory('Food')"
-                        >
-                            🍔 Food
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Groceries"
-                            onclick="selectExpenseCategory('Groceries')"
-                        >
-                            🛒 Groceries
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Transport"
-                            onclick="selectExpenseCategory('Transport')"
-                        >
-                            🚕 Transport
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Rent"
-                            onclick="selectExpenseCategory('Rent')"
-                        >
-                            🏠 Rent
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Utilities"
-                            onclick="selectExpenseCategory('Utilities')"
-                        >
-                            💡 Utilities
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="WiFi"
-                            onclick="selectExpenseCategory('WiFi')"
-                        >
-                            📶 WiFi
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Entertainment"
-                            onclick="selectExpenseCategory('Entertainment')"
-                        >
-                            🎬 Entertainment
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Medical"
-                            onclick="selectExpenseCategory('Medical')"
-                        >
-                            💊 Medical
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Household"
-                            onclick="selectExpenseCategory('Household')"
-                        >
-                            🧹 Household
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="category"
-                            data-category="Other"
-                            onclick="selectExpenseCategory('Other')"
-                        >
-                            📦 Other
-                        </button>
-
-
-                    </div>
-
-
-                    <!-- NEXT -->
-
-                    <button
-                        type="button"
-                        class="category-arrow"
-                        onclick="slideCategories(280)"
-                        aria-label="Next category"
-                    >
-                        ›
-                    </button>
-
-
-                </div>
-
-
-                <!-- =========================
-                     EXPENSE NAME
-                ========================== -->
+                <h2>💸 Add Expense</h2>
 
                 <input
                     type="text"
                     id="expenseTitle"
                     placeholder="Expense name (e.g. Groceries)"
-                    autocomplete="off"
                 >
-
-
-                <!-- =========================
-                     AMOUNT
-                ========================== -->
 
                 <input
                     type="number"
                     id="expenseAmount"
                     placeholder="Amount (₹)"
-                    min="0"
-                    step="0.01"
-                    inputmode="decimal"
                 >
-
-
-                <!-- =========================
-                     WHO PAID
-                ========================== -->
 
                 <select id="paidBy">
 
@@ -362,13 +132,7 @@
 
                 </select>
 
-
-                <!-- =========================
-                     ADD EXPENSE BUTTON
-                ========================== -->
-
                 <button
-                    type="button"
                     class="primary-button"
                     onclick="addExpense()"
                 >
@@ -380,29 +144,20 @@
         </section>
 
 
-        <!-- =========================
-             EXPENSE HISTORY
-        ========================== -->
-
+        <!-- EXPENSE HISTORY -->
         <section class="card">
 
             <div class="section-heading">
 
                 <div>
-
-                    <h2>
-                        📋 Expense History
-                    </h2>
+                    <h2>📋 Expense History</h2>
 
                     <p>
                         All shared expenses are recorded here.
                     </p>
-
                 </div>
 
-
                 <button
-                    type="button"
                     class="clear-button"
                     onclick="clearExpenses()"
                 >
@@ -410,7 +165,6 @@
                 </button>
 
             </div>
-
 
             <div id="expenseList">
 
@@ -423,36 +177,26 @@
         </section>
 
 
-        <!-- =========================
-             CURRENT BALANCES
-        ========================== -->
-
+        <!-- BALANCES -->
         <section class="card">
 
             <div class="section-heading">
 
                 <div>
-
-                    <h2>
-                        📊 Current Balances
-                    </h2>
+                    <h2>📊 Current Balances</h2>
 
                     <p>
                         See who should receive or pay money.
                     </p>
-
                 </div>
 
-
                 <button
-                    type="button"
                     onclick="calculateSettlement()"
                 >
                     Calculate
                 </button>
 
             </div>
-
 
             <div
                 id="balanceList"
@@ -468,10 +212,7 @@
         </section>
 
 
-        <!-- =========================
-             SMART SETTLEMENT
-        ========================== -->
-
+        <!-- SMART SETTLEMENT -->
         <section class="settlement">
 
             <div class="settlement-header">
@@ -482,19 +223,14 @@
                         SMART ALGORITHM
                     </p>
 
-
-                    <h2>
-                        ⚡ Minimum Settlement
-                    </h2>
-
+                    <h2>⚡ Minimum Settlement</h2>
 
                     <p>
-                        Our algorithm reduces unnecessary
-                        payments between roommates.
+                        Our algorithm reduces unnecessary payments
+                        between roommates.
                     </p>
 
                 </div>
-
 
                 <div class="algorithm-icon">
                     🧠
@@ -506,31 +242,22 @@
             <div id="settlementResult">
 
                 <div class="empty settlement-empty">
-
                     Add expenses and click
-                    <b>Calculate</b>
-                    to generate the optimal
-                    settlement plan.
-
+                    <b>Calculate</b> to generate
+                    the optimal settlement plan.
                 </div>
 
             </div>
 
         </section>
 
-
     </main>
 
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
+    <!-- FOOTER -->
     <footer>
 
-        <strong>
-            SplitSmart
-        </strong>
+        <strong>SplitSmart</strong>
 
         <p>
             Built for School Hackathon 🚀
@@ -539,12 +266,8 @@
     </footer>
 
 
-    <!-- =========================
-         JAVASCRIPT
-    ========================== -->
-
     <script src="script.js"></script>
 
 </body>
-
 </html>
+      

@@ -1,462 +1,40 @@
-/* =========================================================
-   SPLITSMART
-   Roommate Expense Tracker
-   Frontend + Flask Backend + SQLite
-   ========================================================= */
-
-
-/* =========================
-   BACKEND URL
-   ========================= */
-
-const API_URL =
-    "https://splitsmart-1-8wbx.onrender.com/api";
-
-
-/* =========================
-   APPLICATION DATA
-   ========================= */
-
 let roommates = [];
 let expenses = [];
 
 
-/* =========================
-   CATEGORY SELECTOR
-   ========================= */
+/* ADD ROOMMATE */
 
-function selectExpenseCategory(category) {
+function addRoommate() {
 
-    const expenseTitle =
-        document.getElementById("expenseTitle");
-
-    if (!expenseTitle) {
-        return;
-    }
-
-    expenseTitle.value = category;
-
-    expenseTitle.focus();
-
-    /* Highlight selected category */
-
-    document
-        .querySelectorAll(".category")
-        .forEach(button => {
-
-            button.classList.remove("selected");
-
-            if (
-                button.dataset.category === category
-            ) {
-                button.classList.add("selected");
-            }
-
-        });
-}
-
-
-/* =========================
-   CATEGORY SLIDER
-   ========================= */
-
-function slideCategories(distance) {
-
-    const slider =
-        document.getElementById("categoryScroll");
-
-    if (!slider) {
-        return;
-    }
-
-    slider.scrollBy({
-        left: distance,
-        behavior: "smooth"
-    });
-}
-
-
-/* =========================
-   PAGE STARTUP
-   ========================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    async function () {
-
-        setupCategoryButtons();
-
-        await loadRoommates();
-
-        await loadExpenses();
-
-        updatePaidBy();
-
-        updateStats();
-
-    }
-);
-
-
-/* =========================
-   CATEGORY BUTTON SETUP
-   ========================= */
-
-function setupCategoryButtons() {
-
-    const categoryButtons =
-        document.querySelectorAll(
-            ".category"
-        );
-
-
-    categoryButtons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    event.stopPropagation();
-
-                    const category =
-                        button.dataset.category ||
-                        button.textContent
-                            .trim()
-                            .replace(
-                                /^[^\w]+/,
-                                ""
-                            );
-
-                    selectExpenseCategory(
-                        category
-                    );
-
-                }
-            );
-
-        }
-    );
-}
-
-
-/* =========================
-   LOAD ROOMMATES
-   ========================= */
-
-async function loadRoommates() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/roommates`
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Could not load roommates."
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        roommates =
-            Array.isArray(data)
-                ? data
-                : [];
-
-
-        updateRoommateList();
-
-        updatePaidBy();
-
-        updateStats();
-
-
-    } catch (error) {
-
-        console.error(
-            "Load roommates error:",
-            error
-        );
-
-
-        const list =
-            document.getElementById(
-                "roommateList"
-            );
-
-
-        if (list) {
-
-            list.innerHTML = `
-                <p class="empty">
-                    Could not load roommates.
-                </p>
-            `;
-
-        }
-
-    }
-}
-
-
-/* =========================
-   LOAD EXPENSES
-   ========================= */
-
-async function loadExpenses() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/expenses`
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Could not load expenses."
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        expenses =
-            Array.isArray(data)
-                ? data
-                : [];
-
-
-        updateExpenseList();
-
-        updateStats();
-
-
-    } catch (error) {
-
-        console.error(
-            "Load expenses error:",
-            error
-        );
-
-
-        const list =
-            document.getElementById(
-                "expenseList"
-            );
-
-
-        if (list) {
-
-            list.innerHTML = `
-                <p class="empty">
-                    Could not load expenses.
-                </p>
-            `;
-
-        }
-
-    }
-}
-
-
-/* =========================
-   ADD ROOMMATE
-   ========================= */
-
-async function addRoommate() {
-
-    const input =
-        document.getElementById(
-            "roommateName"
-        );
-
-
-    if (!input) {
-        return;
-    }
-
-
-    const name =
-        input.value.trim();
-
+    const input = document.getElementById("roommateName");
+    const name = input.value.trim();
 
     if (name === "") {
-
-        alert(
-            "Please enter a roommate name."
-        );
-
-        input.focus();
-
+        alert("Please enter a roommate name!");
         return;
     }
 
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/roommates`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        name: name
-                    })
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            alert(
-                data.error ||
-                "Could not add roommate."
-            );
-
-            return;
-        }
-
-
-        input.value = "";
-
-
-        await loadRoommates();
-
-
-    } catch (error) {
-
-        console.error(
-            "Add roommate error:",
-            error
-        );
-
-
-        alert(
-            "Could not connect to the SplitSmart backend."
-        );
-
+    if (roommates.includes(name)) {
+        alert("This roommate already exists!");
+        return;
     }
+
+    roommates.push(name);
+
+    input.value = "";
+
+    updateRoommateList();
+    updatePaidBy();
+    updateStats();
 }
 
 
-/* =========================
-   REMOVE ROOMMATE
-   ========================= */
-
-async function removeRoommate(index) {
-
-    const person =
-        roommates[index];
-
-
-    if (!person) {
-        return;
-    }
-
-
-    const confirmed =
-        confirm(
-            `Remove ${person.name} from the roommates list?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/roommates/${person.id}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            alert(
-                data.error ||
-                "Could not remove roommate."
-            );
-
-            return;
-        }
-
-
-        await loadRoommates();
-
-        await loadExpenses();
-
-        resetCalculationDisplay();
-
-
-    } catch (error) {
-
-        console.error(
-            "Remove roommate error:",
-            error
-        );
-
-
-        alert(
-            "Could not connect to the SplitSmart backend."
-        );
-
-    }
-}
-
-
-/* =========================
-   UPDATE ROOMMATE LIST
-   ========================= */
+/* UPDATE ROOMMATE LIST */
 
 function updateRoommateList() {
 
     const list =
-        document.getElementById(
-            "roommateList"
-        );
-
-
-    if (!list) {
-        return;
-    }
-
+        document.getElementById("roommateList");
 
     if (roommates.length === 0) {
 
@@ -469,400 +47,166 @@ function updateRoommateList() {
         return;
     }
 
-
     list.innerHTML = "";
 
+    roommates.forEach((person, index) => {
 
-    roommates.forEach(
-        (person, index) => {
+        list.innerHTML += `
 
-            const row =
-                document.createElement(
-                    "div"
-                );
+            <div class="roommate">
 
-            row.className =
-                "roommate";
+                <div class="person-info">
 
+                    <div class="person-circle">
+                        ${person.charAt(0).toUpperCase()}
+                    </div>
 
-            const info =
-                document.createElement(
-                    "div"
-                );
+                    <strong>${person}</strong>
 
-            info.className =
-                "person-info";
+                </div>
 
+                <button
+                    class="delete-button"
+                    onclick="removeRoommate(${index})"
+                >
+                    🗑️
+                </button>
 
-            const circle =
-                document.createElement(
-                    "div"
-                );
+            </div>
 
-            circle.className =
-                "person-circle";
-
-
-            circle.textContent =
-                String(person.name)
-                    .charAt(0)
-                    .toUpperCase();
-
-
-            const name =
-                document.createElement(
-                    "strong"
-                );
-
-
-            name.textContent =
-                person.name;
-
-
-            info.appendChild(circle);
-
-            info.appendChild(name);
-
-
-            const deleteButton =
-                document.createElement(
-                    "button"
-                );
-
-
-            deleteButton.type =
-                "button";
-
-
-            deleteButton.className =
-                "delete-button";
-
-
-            deleteButton.textContent =
-                "🗑️";
-
-
-            deleteButton.addEventListener(
-                "click",
-                function () {
-                    removeRoommate(index);
-                }
-            );
-
-
-            row.appendChild(info);
-
-            row.appendChild(
-                deleteButton
-            );
-
-
-            list.appendChild(row);
-
-        }
-    );
+        `;
+    });
 }
+function removeRoommate(index) {
 
+    const person = roommates[index];
 
-/* =========================
-   UPDATE PAID BY
-   ========================= */
+    const usedInExpense =
+        expenses.some(
+            expense => expense.paidBy === person
+        );
+
+    if (usedInExpense) {
+
+        alert(
+            `${person} cannot be removed because they have paid an expense. Delete their expense first.`
+        );
+
+        return;
+    }
+
+    const confirmRemove =
+        confirm(
+            `Remove ${person} from the roommates list?`
+        );
+
+    if (!confirmRemove) {
+        return;
+    }
+
+    roommates.splice(index, 1);
+
+    updateRoommateList();
+    updatePaidBy();
+    updateStats();
+
+    document.getElementById("balanceList").innerHTML = `
+        <p class="empty">
+            Add expenses to calculate balances.
+        </p>
+    `;
+
+    document.getElementById("settlementResult").innerHTML = `
+        <div class="empty settlement-empty">
+            Add expenses and click
+            <b>Calculate</b>
+            to generate the optimal settlement plan.
+        </div>
+    `;
+}
 
 function updatePaidBy() {
 
     const select =
-        document.getElementById(
-            "paidBy"
-        );
+        document.getElementById("paidBy");
 
+    select.innerHTML =
+        `<option value="">Who paid?</option>`;
 
-    if (!select) {
-        return;
-    }
+    roommates.forEach(person => {
 
-
-    select.innerHTML = `
-        <option value="">
-            Who paid?
-        </option>
-    `;
-
-
-    roommates.forEach(
-        person => {
-
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-
-            option.value =
-                String(person.id);
-
-
-            option.textContent =
-                person.name;
-
-
-            select.appendChild(
-                option
-            );
-
-        }
-    );
+        select.innerHTML += `
+            <option value="${person}">
+                ${person}
+            </option>
+        `;
+    });
 }
 
 
-/* =========================
-   ADD EXPENSE
-   ========================= */
+/* ADD EXPENSE */
 
-async function addExpense() {
-
-    if (roommates.length < 2) {
-
-        alert(
-            "Please add at least 2 roommates!"
-        );
-
-        return;
-    }
-
-
-    const titleInput =
-        document.getElementById(
-            "expenseTitle"
-        );
-
-
-    const amountInput =
-        document.getElementById(
-            "expenseAmount"
-        );
-
-
-    const paidByInput =
-        document.getElementById(
-            "paidBy"
-        );
-
-
-    if (
-        !titleInput ||
-        !amountInput ||
-        !paidByInput
-    ) {
-
-        console.error(
-            "Expense form elements not found."
-        );
-
-        return;
-    }
-
+function addExpense() {
 
     const title =
-        titleInput.value.trim();
-
+        document.getElementById("expenseTitle")
+        .value.trim();
 
     const amount =
         Number(
-            amountInput.value
+            document.getElementById("expenseAmount")
+            .value
         );
-
 
     const paidBy =
-        Number(
-            paidByInput.value
-        );
+        document.getElementById("paidBy").value;
+
+
+    if (roommates.length < 2) {
+
+        alert("Please add at least 2 roommates!");
+
+        return;
+    }
 
 
     if (
         title === "" ||
-        !Number.isFinite(amount) ||
         amount <= 0 ||
-        !paidBy
+        paidBy === ""
     ) {
 
-        alert(
-            "Please fill all expense details correctly."
-        );
+        alert("Please fill all expense details!");
 
         return;
     }
 
 
-    try {
+    expenses.push({
 
-        const response =
-            await fetch(
-                `${API_URL}/expenses`,
-                {
-                    method: "POST",
+        title: title,
+        amount: amount,
+        paidBy: paidBy
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        title:
-                            title,
-
-                        amount:
-                            amount,
-
-                        paidBy:
-                            paidBy
-
-                    })
-                }
-            );
+    });
 
 
-        const data =
-            await response.json();
+    document.getElementById("expenseTitle").value = "";
+    document.getElementById("expenseAmount").value = "";
+    document.getElementById("paidBy").value = "";
 
 
-        if (!response.ok) {
-
-            alert(
-                data.error ||
-                "Could not add expense."
-            );
-
-            return;
-        }
-
-
-        titleInput.value = "";
-
-        amountInput.value = "";
-
-        paidByInput.value = "";
-
-
-        document
-            .querySelectorAll(".category")
-            .forEach(button => {
-                button.classList.remove(
-                    "selected"
-                );
-            });
-
-
-        await loadExpenses();
-
-        resetCalculationDisplay();
-
-
-    } catch (error) {
-
-        console.error(
-            "Add expense error:",
-            error
-        );
-
-
-        alert(
-            "Could not connect to the SplitSmart backend."
-        );
-
-    }
+    updateExpenseList();
+    updateStats();
 }
 
 
-/* =========================
-   REMOVE EXPENSE
-   ========================= */
-
-async function removeExpense(index) {
-
-    const expense =
-        expenses[index];
-
-
-    if (!expense) {
-        return;
-    }
-
-
-    const confirmed =
-        confirm(
-            `Delete "${expense.title}"?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/expenses/${expense.id}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            alert(
-                data.error ||
-                "Could not delete expense."
-            );
-
-            return;
-        }
-
-
-        await loadExpenses();
-
-        resetCalculationDisplay();
-
-
-    } catch (error) {
-
-        console.error(
-            "Remove expense error:",
-            error
-        );
-
-
-        alert(
-            "Could not connect to the SplitSmart backend."
-        );
-
-    }
-}
-
-
-/* =========================
-   UPDATE EXPENSE LIST
-   ========================= */
+/* UPDATE EXPENSE LIST */
 
 function updateExpenseList() {
 
     const list =
-        document.getElementById(
-            "expenseList"
-        );
-
-
-    if (!list) {
-        return;
-    }
-
+        document.getElementById("expenseList");
 
     if (expenses.length === 0) {
 
@@ -875,441 +219,235 @@ function updateExpenseList() {
         return;
     }
 
-
     list.innerHTML = "";
 
+    expenses.forEach((expense, index) => {
 
-    expenses.forEach(
-        (expense, index) => {
+        list.innerHTML += `
 
-            const row =
-                document.createElement(
-                    "div"
-                );
+            <div class="expense">
 
+                <div>
 
-            row.className =
-                "expense";
+                    <div class="expense-title">
+                        ${expense.title}
+                    </div>
 
+                    <div class="expense-info">
+                        Paid by ${expense.paidBy}
+                    </div>
 
-            const info =
-                document.createElement(
-                    "div"
-                );
+                </div>
 
+                <div style="display:flex; align-items:center; gap:12px;">
 
-            const title =
-                document.createElement(
-                    "div"
-                );
+                    <div class="expense-amount">
+                        ₹${expense.amount.toFixed(2)}
+                    </div>
 
+                    <button
+                        class="delete-button"
+                        onclick="removeExpense(${index})"
+                    >
+                        🗑️
+                    </button>
 
-            title.className =
-                "expense-title";
+                </div>
 
+            </div>
 
-            title.textContent =
-                expense.title;
+        `;
 
+    });
+}
+function removeExpense(index) {
 
-            const payer =
-                document.createElement(
-                    "div"
-                );
+    const expense = expenses[index];
 
+    const confirmRemove =
+        confirm(
+            `Delete "${expense.title}"?`
+        );
 
-            payer.className =
-                "expense-info";
+    if (!confirmRemove) {
+        return;
+    }
 
+    expenses.splice(index, 1);
 
-            payer.textContent =
-                `Paid by ${expense.payer}`;
+    updateExpenseList();
+    updateStats();
 
+    document.getElementById("balanceList").innerHTML = `
+        <p class="empty">
+            Add expenses to calculate balances.
+        </p>
+    `;
 
-            info.appendChild(title);
+    document.getElementById("settlementResult").innerHTML = `
+        <div class="empty settlement-empty">
+            Add expenses and click
+            <b>Calculate</b>
+            to generate the optimal settlement plan.
+        </div>
+    `;
 
-            info.appendChild(payer);
-
-
-            const right =
-                document.createElement(
-                    "div"
-                );
-
-
-            right.style.display =
-                "flex";
-
-            right.style.alignItems =
-                "center";
-
-            right.style.gap =
-                "12px";
-
-
-            const amount =
-                document.createElement(
-                    "div"
-                );
-
-
-            amount.className =
-                "expense-amount";
-
-
-            amount.textContent =
-                `₹${Number(
-                    expense.amount
-                ).toFixed(2)}`;
-
-
-            const deleteButton =
-                document.createElement(
-                    "button"
-                );
-
-
-            deleteButton.type =
-                "button";
-
-
-            deleteButton.className =
-                "delete-button";
-
-
-            deleteButton.textContent =
-                "🗑️";
-
-
-            deleteButton.addEventListener(
-                "click",
-                function () {
-                    removeExpense(index);
-                }
-            );
-
-
-            right.appendChild(amount);
-
-            right.appendChild(
-                deleteButton
-            );
-
-
-            row.appendChild(info);
-
-            row.appendChild(right);
-
-
-            list.appendChild(row);
-
-        }
-    );
+    document.getElementById("transactionCount")
+        .textContent = "0";
 }
 
-
-/* =========================
-   CLEAR ALL EXPENSES
-   ========================= */
-
-async function clearExpenses() {
+function clearExpenses() {
 
     if (expenses.length === 0) {
         return;
     }
 
-
-    const confirmed =
+    const confirmClear =
         confirm(
             "Are you sure you want to clear all expenses?"
         );
 
 
-    if (!confirmed) {
-        return;
-    }
+    if (confirmClear) {
+
+        expenses = [];
+
+        updateExpenseList();
+        updateStats();
+
+        document.getElementById("balanceList").innerHTML = `
+            <p class="empty">
+                Add expenses to calculate balances.
+            </p>
+        `;
 
 
-    try {
+        document.getElementById("settlementResult").innerHTML = `
+            <div class="empty settlement-empty">
 
-        const expenseCopy =
-            [...expenses];
+                Add expenses and click
+                <b>Calculate</b>
+                to generate the optimal settlement plan.
 
-
-        for (
-            const expense
-            of expenseCopy
-        ) {
-
-            const response =
-                await fetch(
-                    `${API_URL}/expenses/${expense.id}`,
-                    {
-                        method: "DELETE"
-                    }
-                );
-
-
-            if (!response.ok) {
-
-                console.error(
-                    `Could not delete expense ${expense.id}`
-                );
-
-            }
-
-        }
-
-
-        await loadExpenses();
-
-        resetCalculationDisplay();
-
-
-    } catch (error) {
-
-        console.error(
-            "Clear expenses error:",
-            error
-        );
-
-
-        alert(
-            "Could not clear all expenses."
-        );
-
+            </div>
+        `;
     }
 }
 
 
-/* =========================
-   UPDATE STATISTICS
-   ========================= */
+/* UPDATE TOP STATS */
 
 function updateStats() {
 
     const total =
         expenses.reduce(
             (sum, expense) =>
-                sum +
-                Number(expense.amount),
+                sum + expense.amount,
             0
         );
 
 
-    const totalExpenses =
-        document.getElementById(
-            "totalExpenses"
-        );
+    document.getElementById(
+        "totalExpenses"
+    ).textContent =
+        `₹${total.toFixed(2)}`;
 
 
-    const totalRoommates =
-        document.getElementById(
-            "totalRoommates"
-        );
+    document.getElementById(
+        "totalRoommates"
+    ).textContent =
+        roommates.length;
 
-
-    if (totalExpenses) {
-
-        totalExpenses.textContent =
-            `₹${total.toFixed(2)}`;
-
-    }
-
-
-    if (totalRoommates) {
-
-        totalRoommates.textContent =
-            roommates.length;
-
-    }
 }
 
 
-/* =========================
-   CALCULATE SETTLEMENT
-   ========================= */
+/* CALCULATE BALANCES */
 
-async function calculateSettlement() {
+function calculateSettlement() {
 
     if (roommates.length < 2) {
-
-        alert(
-            "Please add at least 2 roommates!"
-        );
-
+        alert("Please add at least 2 roommates!");
         return;
     }
-
 
     if (expenses.length === 0) {
-
-        alert(
-            "Please add at least one expense!"
-        );
-
+        alert("Please add at least one expense!");
         return;
     }
 
+    let balances = {};
 
-    try {
+    roommates.forEach(person => {
+        balances[person] = 0;
+    });
 
-        const response =
-            await fetch(
-                `${API_URL}/settle`
-            );
+    expenses.forEach(expense => {
 
+        const share =
+            expense.amount / roommates.length;
 
-        const data =
-            await response.json();
+        roommates.forEach(person => {
+            balances[person] -= share;
+        });
 
+        balances[expense.paidBy] += expense.amount;
+    });
 
-        if (!response.ok) {
+    showBalances(balances);
 
-            throw new Error(
-                data.error ||
-                "Could not calculate settlement."
-            );
+    const transactions =
+        minimizeTransactions(balances);
 
-        }
-
-
-        await loadBalances();
-
-
-        showSettlement(
-            data.transactions || []
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Calculate settlement error:",
-            error
-        );
-
-
-        alert(
-            "Could not calculate settlement from the backend."
-        );
-
-    }
+    showSettlement(transactions);
 }
-
-
-/* =========================
-   LOAD BALANCES
-   ========================= */
-
-async function loadBalances() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/balances`
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error ||
-                "Could not load balances."
-            );
-
-        }
-
-
-        showBalances(data);
-
-
-    } catch (error) {
-
-        console.error(
-            "Load balances error:",
-            error
-        );
-
-
-        alert(
-            "Could not load balances."
-        );
-
-    }
-}
-
-
-/* =========================
-   SHOW BALANCES
-   ========================= */
+/* SHOW BALANCES */
 
 function showBalances(balances) {
 
     const balanceList =
-        document.getElementById(
-            "balanceList"
-        );
-
-
-    if (!balanceList) {
-        return;
-    }
+        document.getElementById("balanceList");
 
 
     balanceList.innerHTML = "";
 
 
-    Object.entries(
-        balances || {}
-    ).forEach(
+    Object.entries(balances).forEach(
         ([person, balance]) => {
 
+
             const roundedBalance =
-                Math.round(
-                    Number(balance) * 100
-                ) / 100;
+                Math.round(balance * 100) / 100;
 
 
-            let status =
-                "Settled";
+            let status = "";
+            let className = "";
 
 
-            let className =
-                "";
-
-
-            if (
-                roundedBalance >
-                0.01
-            ) {
+            if (roundedBalance > 0.01) {
 
                 status =
                     `Gets ₹${roundedBalance.toFixed(2)}`;
 
-                className =
-                    "gets";
+                className = "gets";
 
             }
 
-
-            else if (
-                roundedBalance <
-                -0.01
-            ) {
+            else if (roundedBalance < -0.01) {
 
                 status =
                     `Owes ₹${Math.abs(
                         roundedBalance
                     ).toFixed(2)}`;
 
-                className =
-                    "owes";
+                className = "owes";
+
+            }
+
+            else {
+
+                status = "Settled";
+
+                className = "";
 
             }
 
@@ -1332,16 +470,126 @@ function showBalances(balances) {
 
         }
     );
+
 }
 
 
-/* =========================
-   SHOW SETTLEMENT
-   ========================= */
+/* MINIMUM TRANSACTION ALGORITHM */
 
-function showSettlement(
-    transactions
-) {
+function minimizeTransactions(balances) {
+
+    let debtors = [];
+    let creditors = [];
+
+
+    Object.entries(balances).forEach(
+        ([person, amount]) => {
+
+
+            amount =
+                Math.round(amount * 100) / 100;
+
+
+            if (amount < -0.01) {
+
+                debtors.push({
+
+                    name: person,
+                    amount: Math.abs(amount)
+
+                });
+
+            }
+
+
+            else if (amount > 0.01) {
+
+                creditors.push({
+
+                    name: person,
+                    amount: amount
+
+                });
+
+            }
+
+        }
+    );
+
+
+    let transactions = [];
+
+    let debtorIndex = 0;
+    let creditorIndex = 0;
+
+
+    while (
+
+        debtorIndex < debtors.length &&
+        creditorIndex < creditors.length
+
+    ) {
+
+
+        const payment =
+            Math.min(
+
+                debtors[debtorIndex].amount,
+
+                creditors[creditorIndex].amount
+
+            );
+
+
+        transactions.push({
+
+            from:
+                debtors[debtorIndex].name,
+
+            to:
+                creditors[creditorIndex].name,
+
+            amount:
+                Math.round(payment * 100) / 100
+
+        });
+
+
+        debtors[debtorIndex].amount -=
+            payment;
+
+        creditors[creditorIndex].amount -=
+            payment;
+
+
+        if (
+            debtors[debtorIndex].amount < 0.01
+        ) {
+
+            debtorIndex++;
+
+        }
+
+
+        if (
+            creditors[creditorIndex].amount < 0.01
+        ) {
+
+            creditorIndex++;
+
+        }
+
+    }
+
+
+    return transactions;
+
+}
+
+
+/* SHOW SETTLEMENT */
+
+function showSettlement(transactions) {
 
     const result =
         document.getElementById(
@@ -1349,36 +597,13 @@ function showSettlement(
         );
 
 
-    const transactionCount =
-        document.getElementById(
-            "transactionCount"
-        );
+    document.getElementById(
+        "transactionCount"
+    ).textContent =
+        transactions.length;
 
 
-    if (!result) {
-        return;
-    }
-
-
-    const safeTransactions =
-        Array.isArray(
-            transactions
-        )
-            ? transactions
-            : [];
-
-
-    if (transactionCount) {
-
-        transactionCount.textContent =
-            safeTransactions.length;
-
-    }
-
-
-    if (
-        safeTransactions.length === 0
-    ) {
+    if (transactions.length === 0) {
 
         result.innerHTML = `
 
@@ -1391,107 +616,37 @@ function showSettlement(
         `;
 
         return;
+
     }
 
 
     result.innerHTML = "";
 
 
-    safeTransactions.forEach(
-        transaction => {
+    transactions.forEach(transaction => {
 
-            result.innerHTML += `
+        result.innerHTML += `
 
-                <div class="transaction">
+            <div class="transaction">
 
-                    <strong>
-                        ${transaction.from}
-                    </strong>
+                <strong>
+                    ${transaction.from}
+                </strong>
 
-                    pays
+                pays
 
-                    <strong>
-                        ${transaction.to}
-                    </strong>
+                <strong>
+                    ${transaction.to}
+                </strong>
 
-                    <span class="amount">
-
-                        →
-                        ₹${Number(
-                            transaction.amount
-                        ).toFixed(2)}
-
-                    </span>
-
-                </div>
-
-            `;
-
-        }
-    );
-}
-
-
-/* =========================
-   RESET CALCULATION DISPLAY
-   ========================= */
-
-function resetCalculationDisplay() {
-
-    const balanceList =
-        document.getElementById(
-            "balanceList"
-        );
-
-
-    const settlementResult =
-        document.getElementById(
-            "settlementResult"
-        );
-
-
-    const transactionCount =
-        document.getElementById(
-            "transactionCount"
-        );
-
-
-    if (balanceList) {
-
-        balanceList.innerHTML = `
-
-            <p class="empty">
-                Add expenses to calculate balances.
-            </p>
-
-        `;
-
-    }
-
-
-    if (settlementResult) {
-
-        settlementResult.innerHTML = `
-
-            <div class="empty settlement-empty">
-
-                Add expenses and click
-                <b>Calculate</b>
-                to generate the optimal
-                settlement plan.
+                <span class="amount">
+                    → ₹${transaction.amount.toFixed(2)}
+                </span>
 
             </div>
 
         `;
 
-    }
-
-
-    if (transactionCount) {
-
-        transactionCount.textContent =
-            "0";
-
-    }
+    });
 
 }
